@@ -281,7 +281,7 @@ h2 {
 
 .vorhang { position: relative; border-radius: 22px; overflow: hidden; border: 1px solid var(--grund-rand); }
 .vorhang img { filter: saturate(1.05); }
-.vorhang::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, var(--grund) 96%); }
+.vorhang::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 72%, var(--grund) 100%); }
 .vorhang .ueber { position: absolute; left: 0; right: 0; bottom: 26px; text-align: center; z-index: 1; color: #fff; font-weight: 700; font-size: 18px; }
 
 .ruf { text-align: center; padding: 70px 22px; }
@@ -298,8 +298,8 @@ h2 {
 /* Abstand der Abschnitte (.bahn ueberschrieb das senkrechte Polster) */
 section.bahn { padding: 84px 22px; }
 .dunkel + .dunkel section.bahn, section.dunkel.bahn + section.dunkel.bahn { padding-top: 40px; }
-.vorhang { max-height: 460px; }
-.vorhang img { object-fit: cover; object-position: top; height: 460px; width: 100%; }
+.vorhang { max-height: none; }
+.vorhang img { display: block; width: 100%; height: auto; }
 /* Gruender als dunkle Karte, passend zum Rest */
 .gruender-band { background: var(--grund); }
 .gruender-band .gruender { background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
