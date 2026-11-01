@@ -125,11 +125,10 @@
       <ul><li>Cut out the car automatically</li><li>Choose a studio background, or your own</li><li>Match the light to the room</li><li>Put logo, price and details on the image</li></ul>
     </div>
     <div class="zeig">
-      <div class="vn-etiketten"><span class="etikett l">Before</span><span class="etikett r">After</span></div>
       <div class="vergleich" style="--pos:50%">
         <img src="../bilder/showroom_nachher_5.jpg" alt="Showroom picture from the app" loading="lazy">
         <img class="vorher" src="../bilder/showroom_vorher_3.jpg" alt="Original photo from the yard" loading="lazy">
-        <div class="griff"></div>
+        <div class="griff"><span class="etikett l">Before</span><span class="etikett r">After</span></div>
         
         <input type="range" min="0" max="100" value="50" aria-label="Compare before and after">
       </div>
@@ -347,6 +346,34 @@
       b.observe(v);
     }
   });
+})();
+</script>
+<script>
+// Laufband (01.11.2026): schneller, mit dem Finger wischen, Tippen haelt an / laeuft weiter
+(function () {
+  var m = document.querySelector('.laufband-maske'), spur = document.querySelector('.laufband-spur');
+  if (!m || !spur) return;
+  spur.style.animation = 'none';
+  var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var halt = ruhig, finger = false, warte = 0;
+  function lauf() {
+    var haelfte = spur.scrollWidth / 2;
+    if (!halt && !finger && Date.now() > warte) m.scrollLeft += 1.1;
+    if (m.scrollLeft >= haelfte) m.scrollLeft -= haelfte;
+    if (m.scrollLeft <= 0 && finger) m.scrollLeft += haelfte;
+    requestAnimationFrame(lauf);
+  }
+  m.addEventListener('click', function () { halt = !halt; m.classList.toggle('angehalten', halt); });
+  m.addEventListener('pointerdown', function () { finger = true; });
+  window.addEventListener('pointerup', function () { if (finger) { finger = false; warte = Date.now() + 1500; } });
+  m.addEventListener('touchstart', function () { finger = true; }, { passive: true });
+  m.addEventListener('touchend', function () { finger = false; warte = Date.now() + 1500; });
+  // Maus: ziehen wie mit dem Finger
+  var x0 = null, s0 = 0;
+  m.addEventListener('mousedown', function (e) { x0 = e.clientX; s0 = m.scrollLeft; e.preventDefault(); });
+  window.addEventListener('mousemove', function (e) { if (x0 !== null) m.scrollLeft = s0 - (e.clientX - x0); });
+  window.addEventListener('mouseup', function () { x0 = null; });
+  requestAnimationFrame(lauf);
 })();
 </script>
 <noscript><style>.zeig{opacity:1;transform:none}</style></noscript>

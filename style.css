@@ -421,3 +421,19 @@ section.bahn { padding: 84px 22px; }
 .vn-etiketten .etikett { position: static; padding: 5px 11px; border-radius: 999px; font-size: 12px; font-weight: 700;
   background: rgba(255,255,255,.12); color: #fff; }
 .vn-etiketten .etikett.r { background: rgba(63,216,232,.85); color: #062028; }
+
+/* 01.11.2026: Etiketten haengen am Schieber und wandern mit */
+.vergleich .griff .etikett { position: absolute; top: calc(50% + 34px); white-space: nowrap; }
+.vergleich .griff .etikett.l { left: auto; right: 10px; }
+.vergleich .griff .etikett.r { right: auto; left: 10px; }
+/* Laufband: wischbar, Tippen haelt an */
+.laufband-maske { overflow-x: auto; scrollbar-width: none; cursor: grab; touch-action: pan-x; }
+.laufband-maske::-webkit-scrollbar { display: none; }
+.laufband-maske.angehalten { cursor: pointer; }
+/* Zwei Telefone nah beieinander, auch quer und auf dem iPad */
+.telefone { max-width: 520px; width: 100%; margin: 0 auto; }
+@media (max-width: 900px) {
+  .telefone { max-width: 430px; }
+  .telefon.a { left: 2%; } .telefon.b { right: 2%; }
+}
+@media (max-width: 440px) { .telefon { width: 170px; } .telefon img { height: 360px; } .telefone { height: 410px; } }
