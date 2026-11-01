@@ -349,7 +349,7 @@
 })();
 </script>
 <script>
-// Laufband (01.11.2026): schneller, mit dem Finger wischen, Tippen haelt an / laeuft weiter
+// Laufband (01.11.2026): schneller, mit dem Finger wischen, laeuft danach von selbst weiter
 (function () {
   var m = document.querySelector('.laufband-maske'), spur = document.querySelector('.laufband-spur');
   if (!m || !spur) return;
@@ -367,11 +367,7 @@
     requestAnimationFrame(lauf);
   }
   function los() { finger = false; warte = Date.now() + 1200; }
-  // Tippen ohne Ziehen haelt an oder laesst weiterlaufen; nach dem Wischen laeuft es weiter
-  m.addEventListener('click', function () {
-    if (gezogen) { gezogen = false; return; }
-    halt = !halt; m.classList.toggle('angehalten', halt);
-  });
+  // Kein Anhalten per Tippen mehr (Wunsch 01.11.): nur wischen, danach laeuft es weiter
   var x0 = null, s0 = 0;
   m.addEventListener('touchstart', function (e) { finger = true; gezogen = false; x0 = e.touches[0].clientX; }, { passive: true });
   m.addEventListener('touchmove', function (e) { if (x0 !== null && Math.abs(e.touches[0].clientX - x0) > 6) gezogen = true; }, { passive: true });
