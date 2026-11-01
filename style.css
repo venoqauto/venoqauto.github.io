@@ -431,9 +431,10 @@ section.bahn { padding: 84px 22px; }
 .laufband-maske::-webkit-scrollbar { display: none; }
 .laufband-maske.angehalten { cursor: pointer; }
 /* Zwei Telefone nah beieinander, auch quer und auf dem iPad */
-.telefone { max-width: 520px; width: 100%; margin: 0 auto; }
+.telefone { max-width: 500px; width: 100%; margin: 0 auto; }
 @media (max-width: 900px) {
-  .telefone { max-width: 430px; }
-  .telefon.a { left: 2%; } .telefon.b { right: 2%; }
+  /* einspaltig (iPad, Handy quer): Telefone ueberlappen leicht, nichts wirkt leer */
+  .telefone { max-width: 380px; }
+  .telefon.a { left: 0; } .telefon.b { right: 0; top: 10px; }
 }
 @media (max-width: 440px) { .telefon { width: 170px; } .telefon img { height: 360px; } .telefone { height: 410px; } }

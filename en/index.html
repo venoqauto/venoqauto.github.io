@@ -18,7 +18,7 @@
 <link rel="icon" href="../favicon.png">
 <link rel="apple-touch-icon" href="../bilder/apple-touch-icon.png">
 <link rel="alternate" hreflang="de" href="../index.html">
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../style.css?v=0111b">
 </head>
 <body>
 <div class="fortschritt" aria-hidden="true"></div>
@@ -355,24 +355,37 @@
   if (!m || !spur) return;
   spur.style.animation = 'none';
   var ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var halt = ruhig, finger = false, warte = 0;
+  // eigene Position als Kommazahl: scrollLeft rundet in Safari, dann bleibt das Band stehen
+  var halt = ruhig, finger = false, warte = 0, pos = 0, gezogen = false;
   function lauf() {
     var haelfte = spur.scrollWidth / 2;
-    if (!halt && !finger && Date.now() > warte) m.scrollLeft += 1.1;
-    if (m.scrollLeft >= haelfte) m.scrollLeft -= haelfte;
-    if (m.scrollLeft <= 0 && finger) m.scrollLeft += haelfte;
+    if (finger || Date.now() < warte) pos = m.scrollLeft;
+    else if (!halt) pos += 1.1;
+    if (pos >= haelfte) pos -= haelfte;
+    if (pos < 0) pos += haelfte;
+    if (!finger) m.scrollLeft = pos;
     requestAnimationFrame(lauf);
   }
-  m.addEventListener('click', function () { halt = !halt; m.classList.toggle('angehalten', halt); });
-  m.addEventListener('pointerdown', function () { finger = true; });
-  window.addEventListener('pointerup', function () { if (finger) { finger = false; warte = Date.now() + 1500; } });
-  m.addEventListener('touchstart', function () { finger = true; }, { passive: true });
-  m.addEventListener('touchend', function () { finger = false; warte = Date.now() + 1500; });
-  // Maus: ziehen wie mit dem Finger
+  function los() { finger = false; warte = Date.now() + 1200; }
+  // Tippen ohne Ziehen haelt an oder laesst weiterlaufen; nach dem Wischen laeuft es weiter
+  m.addEventListener('click', function () {
+    if (gezogen) { gezogen = false; return; }
+    halt = !halt; m.classList.toggle('angehalten', halt);
+  });
   var x0 = null, s0 = 0;
-  m.addEventListener('mousedown', function (e) { x0 = e.clientX; s0 = m.scrollLeft; e.preventDefault(); });
-  window.addEventListener('mousemove', function (e) { if (x0 !== null) m.scrollLeft = s0 - (e.clientX - x0); });
-  window.addEventListener('mouseup', function () { x0 = null; });
+  m.addEventListener('touchstart', function (e) { finger = true; gezogen = false; x0 = e.touches[0].clientX; }, { passive: true });
+  m.addEventListener('touchmove', function (e) { if (x0 !== null && Math.abs(e.touches[0].clientX - x0) > 6) gezogen = true; }, { passive: true });
+  m.addEventListener('touchend', function () { x0 = null; los(); });
+  // Maus: ziehen wie mit dem Finger
+  var maus = false;
+  m.addEventListener('mousedown', function (e) { maus = true; finger = true; gezogen = false; x0 = e.clientX; s0 = m.scrollLeft; e.preventDefault(); });
+  window.addEventListener('mousemove', function (e) {
+    if (!maus) return;
+    if (Math.abs(e.clientX - x0) > 6) gezogen = true;
+    m.scrollLeft = s0 - (e.clientX - x0);
+  });
+  window.addEventListener('mouseup', function () { if (maus) { maus = false; x0 = null; los(); } });
+  m.addEventListener('wheel', function () { warte = Date.now() + 1200; }, { passive: true });
   requestAnimationFrame(lauf);
 })();
 </script>
